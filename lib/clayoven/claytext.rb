@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module ClayText
   # These are the values that Paragraph.type can take
   PARAGRAPH_TYPES = %i[plain emailquote codeblock listitem subheading header footer]
@@ -66,6 +67,21 @@ module ClayText
         end
       end
     end
+
+    def format_markdown!
+      content.gsub!(/(([^\\]|^))`((.|\n)*?)([^\\])`/, "\\1<code>\\3\\5</code>")
+      content.gsub!(/(([^\\]|^))_((.|\n)*?)([^\\])_/, "\\1<em>\\3\\5</em>")
+      content.gsub!(/(([^\\]|^))\*((.|\n)*?)([^\\])\*/, "\\1<strong>\\3\\5</strong>")
+      content.gsub!('--', '—')
+
+      content.gsub!(/\\`/, "`")
+      content.gsub!(/\\_/, "_")
+      content.gsub!(/\\\*/, "*")
+    end
+
+    def is_first?
+      @first
+    end
   end
 
   # Takes a body of claytext, breaks it up into paragraphs, and
@@ -111,6 +127,12 @@ module ClayText
       # One trailing whitespace (/ $/) indicates that a line break
       # should be inserted.
       paragraph.content.gsub!(/ $/, "<br>")
+    end
+
+    paragraphs.each do |paragraph|
+      if paragraph.is_plain?
+        paragraph.format_markdown!
+      end
     end
 
     # body is the useless version.  If someone is too lazy to use all
