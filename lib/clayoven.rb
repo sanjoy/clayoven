@@ -2,6 +2,7 @@ $:.unshift File.dirname(__FILE__)
 
 require 'slim'
 require 'clayoven/config'
+require 'clayoven/clayfeed'
 require 'clayoven/claytext'
 require 'clayoven/httpd'
 require 'clayoven/imapd'
@@ -116,5 +117,6 @@ module Clayoven
     end
 
     (index_pages + content_pages).each { |page| page.render topics }
+    ClayFeed.render!(content_pages)
   end
 end
