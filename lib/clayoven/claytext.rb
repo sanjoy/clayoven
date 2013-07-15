@@ -131,7 +131,7 @@ module ClayText
     end
 
     paragraphs.each do |paragraph|
-      if paragraph.is_plain?
+      if paragraph.is_plain? || paragraph.is_listitem?
         paragraph.format_markdown!
       end
     end
